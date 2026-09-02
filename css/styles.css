@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #F5F8FD;
+    color: #1D3BAE;
+}
+
+/* Logo */
+.logo {
+    justify-self: start;
+    text-decoration: none;
+    color: #1D3BAE;
+}
+
+/* Navegación central */
+nav {
+    justify-self: center;
+}
+
+nav ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+/* Enlaces */
+.nav-link {
+    text-decoration: none;
+    color: #1D3BAE;
+}
+
+/* Crear cuenta / Iniciar sesión */
+header > div {
+    justify-self: end;
+}
+
+header > div ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+
+
+
+
