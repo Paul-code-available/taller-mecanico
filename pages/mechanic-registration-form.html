@@ -8,10 +8,10 @@
 </head>
 <body>
 
-    <div>
+    <div class="container-form">
         
         <form action="process-form" method="POST">
-            <h1>Nuevo mecánico</h1>
+            <h1 class="title-form">Nuevo mecánico</h1>
             <label for="inp-mechanic">Nombre completo</label>
             <input required name="mechanic_name" type="text" id="inp-mechanic"
                 placeholder="Carlos Hernández">
@@ -35,8 +35,8 @@
             </select>
 
             <div class="form-actions">
-                <button type="button">Cancelar</button>
-                <button type="submit">Guardar</button>
+                <button type="button" class="btn-cancel"><a href="/index.html">Cancelar</a></button>
+                <button type="submit" class="btn-save">Guardar</button>
             </div>
 
         </form>
