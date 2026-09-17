@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanic form</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+    <div>
+        
+        <form action="process-form" method="POST">
+            <h1>Nuevo mecánico</h1>
+            <label for="inp-mechanic">Nombre completo</label>
+            <input required name="mechanic_name" type="text" id="inp-mechanic"
+                placeholder="Carlos Hernández">
+            
+            <label for="inp-specialty">Especialidad</label>
+            <input type="text" required name="mechanic_specialty" id="inp-specialty"
+                placeholder="Motor y transmisión">
+
+             <label for="inp-phone">Teléfono</label>
+            <input type="tel" required name="mechanic_phone" id="inp-phone"
+                placeholder="615 155 6681" pattern="[0-9]{10}">
+
+             <label for="inp-email">Correo</label>
+            <input type="email" required name="mechanic_email" id="inp-email"
+                placeholder="mecanico@taller.mx">
+
+            <label for="sel-status">Estado inicial</label>
+            <select id="sel-status" name="initial_status">
+                <option value="available" selected>Disponible</option>
+                <option value="out_of_service">Fuera de servicio</option>
+            </select>
+
+            <div class="form-actions">
+                <button type="button">Cancelar</button>
+                <button type="submit">Guardar</button>
+            </div>
+
+        </form>
+
+        
+    </div>
+    
+</body>
+</html>
