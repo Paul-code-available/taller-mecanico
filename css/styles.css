@@ -143,3 +143,39 @@ form > button {
 
     margin-top: -2px;
 }
+
+.gallery {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.gallery h1 {
+  margin-bottom: 10px;
+}
+
+.gallery h2 {
+  margin-bottom: 30px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.gallery-item {
+  margin: 0;
+  overflow: hidden;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.gallery-item figcaption {
+  padding: 10px 0;
+}
