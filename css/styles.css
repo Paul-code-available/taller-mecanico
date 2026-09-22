@@ -133,7 +133,7 @@ form > button {
 }
 
 .btn-cancel:hover {
-    background-color:  #dbe2ea;
+    background-color: #dbe2ea;
 }
 
 .form-actions {
@@ -178,4 +178,18 @@ form > button {
 
 .gallery-item figcaption {
   padding: 10px 0;
+}
+
+.container-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    min-height: 100vh;
+}
+
+.container-right {
+    background-color: #111827;
+}
+
+.container-left {
+    background-color: #1f2937;
 }
