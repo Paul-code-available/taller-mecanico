@@ -13,8 +13,6 @@
 
 }
 
-/* Form */
-
 form {
     width: 310px;
     background: #ffffff;
@@ -25,8 +23,6 @@ form {
     display: flex;
     flex-direction: column;
 }
-
-/* Título */
 
 .title-form {
     margin: 0 -20px 18px;
@@ -40,7 +36,6 @@ form {
 
 }
 
-/* Labels */
 
 label {
     margin-bottom: 7px;
@@ -48,8 +43,6 @@ label {
     font-size: 13px;
     color: #1f2937;
 }
-
-/* Inputs y select */
 
 input,
 select {
@@ -74,21 +67,15 @@ input::placeholder {
     color: #9ca3af;
 }
 
-/* Focus */
-
 input:focus,
 select:focus {
     border-color: #f05a00;
 }
 
-/* Select */
-
 select {
     cursor: pointer;
     appearance: auto;
 }
-
-/* Botones */
 
 button {
     height: 38px;
@@ -101,8 +88,6 @@ button {
 
     cursor: pointer;
 }
-
-/* Contenedor de botones */
 
 form > button {
     align-self: flex-end;
@@ -192,4 +177,22 @@ form > button {
 
 .container-left {
     background-color: #1f2937;
+}
+
+#navbar {
+    background-color: #1A1C2F;
+    width: 20rem;
+  
+    
+    display: flex;
+    flex-direction: column;
+
+}
+
+#navbar a {
+    text-decoration: none;
+    color: #ffffff;
+
+    padding: 10px;
+    
 }
