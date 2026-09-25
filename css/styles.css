@@ -1,3 +1,7 @@
+:root {
+    --fuente-navbar: "Roboto"  
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -191,7 +195,8 @@ form > button {
 
 #navbar a {
     text-decoration: none;
-    color: #ffffff;
+    color: #cecece;
+    font-family: var(--fuente-navbar);
 
     padding: 10px;
     
