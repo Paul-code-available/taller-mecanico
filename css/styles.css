@@ -185,7 +185,7 @@ form > button {
 
 #navbar {
     background-color: #1A1C2F;
-    width: 20rem;
+    width: 13rem;
   
     
     display: flex;
@@ -197,7 +197,40 @@ form > button {
     text-decoration: none;
     color: #cecece;
     font-family: var(--fuente-navbar);
+    font-size: 13px;
 
     padding: 10px;
     
+}
+
+#navbar .logo {
+
+    color: #ffffff;
+    display: flex;
+
+    align-items: center;
+
+    border-bottom: 1px solid #9ca3af;
+}
+
+#navbar .logo img {
+    width: 5rem;
+}
+
+.contenedor {
+    display: flex;
+}
+
+.header {
+    display: flex;
+}
+
+.header input {
+    width: 100vh;
+    margin: .5rem;
+}
+
+.container-admi {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
