@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
+body {
+    background-color: #f0f2f7;
+}
+
 .container-form {
     margin: 0;
     min-height: 100vh;
@@ -185,8 +189,8 @@ form > button {
 
 #navbar {
     background-color: #1A1C2F;
-    width: 13rem;
-  
+    min-width: 15dvw;
+    min-height: 100dvh;  
     
     display: flex;
     flex-direction: column;
@@ -221,16 +225,34 @@ form > button {
     display: flex;
 }
 
-.header {
-    display: flex;
-}
+
 
 .header input {
-    width: 100vh;
+    width: 600px;
     margin: .5rem;
 }
 
 .container-admi {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.header {
+    background-color: #ffffff;
+    align-items: center;
+
+    display: flex;
+}
+
+.contenedor-block {
+    flex: 1;
+}
+
+.notificaciones {
+    
+}
+
+.cuenta {
+    
+    justify-content: flex-end;
 }
