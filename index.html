@@ -11,23 +11,14 @@
         content="Sistema de administración para talleres mecánicos que permite gestionar clientes, vehículos, citas, órdenes de trabajo, servicios, refacciones y pagos."
     >
 
-    <link rel="stylesheet" href="css/styles.css">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet"
     >
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 
     <meta property="og:title" content="Administrador de Taller Mecánico">
     <meta
@@ -48,101 +39,158 @@
 
     <div class="layout">
 
-        <nav class="navbar">
+        <nav class="navbar layout__sidebar" aria-label="Navegación principal">
 
-            <div class="navbar__logo">
+            <input
+                class="navbar__checkbox"
+                type="checkbox"
+                id="navbar-toggle"
+                aria-label="Abrir o cerrar el menú"
+            >
 
-                <img
-                    class="navbar__logo-image"
-                    src="./assets/img/logo.png"
-                    alt="Logo de la empresa"
-                >
+            <div class="navbar__bar">
 
-                <h2 class="navbar__logo-title">
-                    Taller
-                </h2>
+                <a class="navbar__logo" href="#">
+                    <img
+                        class="navbar__logo-image"
+                        src="./assets/img/logo.png"
+                        alt="Logo de la empresa"
+                    >
+                    <span class="navbar__logo-title">Taller</span>
+                </a>
+
+                <label class="navbar__toggle" for="navbar-toggle" aria-hidden="true">
+                    <span class="navbar__toggle-line"></span>
+                    <span class="navbar__toggle-line"></span>
+                    <span class="navbar__toggle-line"></span>
+                </label>
 
             </div>
 
-            <a class="navbar__link" href="#">
-                Inicio
-            </a>
-
-            <a class="navbar__link" href="#">
-                Clientes
-            </a>
-
-            <a class="navbar__link" href="#">
-                Vehículos
-            </a>
-
-            <a class="navbar__link" href="#">
-                Órdenes de trabajo
-            </a>
-
-            <a class="navbar__link" href="#">
-                Mecánico
-            </a>
-
-            <a class="navbar__link" href="#">
-                Servicios
-            </a>
-
-            <a class="navbar__link" href="#">
-                Refacciones
-            </a>
-
-            <a class="navbar__link" href="#">
-                Pagos
-            </a>
-
-            <a class="navbar__link" href="#">
-                Reportes
-            </a>
+            <ul class="navbar__list">
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Inicio</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Clientes</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Vehículos</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Órdenes de trabajo</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Mecánico</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Servicios</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Refacciones</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Pagos</a>
+                </li>
+                <li class="navbar__item">
+                    <a class="navbar__link" href="#">Reportes</a>
+                </li>
+            </ul>
 
         </nav>
 
 
-        <div class="layout__main">
+        <header class="header layout__header">
 
-            <header class="header">
+            <input
+                class="header__search"
+                type="search"
+                placeholder="Buscar cliente, vehículo u orden..."
+                aria-label="Buscar cliente, vehículo u orden"
+            >
 
-                <input
-                    class="header__search"
-                    type="search"
-                    placeholder="Buscar cliente, vehículo u orden..."
-                >
-
-                <div class="header__notifications">
+            <div class="header__actions">
+                <button class="header__action header__action--notifications" type="button">
                     Notificaciones
-                </div>
+                </button>
 
-                <div class="header__account">
+                <button class="header__action header__action--account" type="button">
                     Cuenta
-                </div>
+                </button>
+            </div>
 
+        </header>
+
+
+        <main class="content layout__main">
+
+            <header class="content__header">
+                <h1 class="content__title">Panel de administración</h1>
+                <time class="content__date" datetime="2026-10-13">13 de octubre de 2026</time>
             </header>
 
+            <section class="content__section" aria-label="Resumen del taller">
+                <ul class="cards">
 
-            <main class="content">
+                    <li class="cards__item">
+                        <article class="card">
+                            <h2 class="card__title">Órdenes abiertas</h2>
+                            <p class="card__value">12</p>
+                            <p class="card__text">En proceso en el taller</p>
+                        </article>
+                    </li>
 
-                <h1 class="content__title">
-                    Panel de administración
-                </h1>
+                    <li class="cards__item">
+                        <article class="card">
+                            <h2 class="card__title">Citas de hoy</h2>
+                            <p class="card__value">5</p>
+                            <p class="card__text">Programadas para hoy</p>
+                        </article>
+                    </li>
 
-                <p class="content__date">
-                    Fecha
-                </p>
+                    <li class="cards__item">
+                        <article class="card">
+                            <h2 class="card__title">Clientes</h2>
+                            <p class="card__value">148</p>
+                            <p class="card__text">Registrados en el sistema</p>
+                        </article>
+                    </li>
 
-                <div class="content__grid">
+                    <li class="cards__item">
+                        <article class="card">
+                            <h2 class="card__title">Vehículos</h2>
+                            <p class="card__value">203</p>
+                            <p class="card__text">Con historial de servicio</p>
+                        </article>
+                    </li>
 
-                 
+                    <li class="cards__item">
+                        <article class="card">
+                            <h2 class="card__title">Refacciones bajas</h2>
+                            <p class="card__value">7</p>
+                            <p class="card__text">Por debajo del mínimo</p>
+                        </article>
+                    </li>
 
-                </div>
+                    <li class="cards__item">
+                        <article class="card">
+                            <h2 class="card__title">Pagos pendientes</h2>
+                            <p class="card__value">9</p>
+                            <p class="card__text">Esperando cobro</p>
+                        </article>
+                    </li>
 
-            </main>
+                </ul>
+            </section>
 
-        </div>
+        </main>
+
+
+        <footer class="footer layout__footer">
+            <p class="footer__text">
+                &copy; 2026 Administrador de Taller Mecánico
+            </p>
+        </footer>
 
     </div>
 
