@@ -1,68 +1,48 @@
-// calculador de IMC
-/*
-const calcularIMC = (peso, altura) => {
 
-    if (typeof peso !== 'number' 
-        || typeof altura !== 'number'
-        || peso <= 0 || altura <= 0)  {
+const reparaciones = [
+    { id: 1, vehiculo: "Toyota Corolla", costo: 1500, horas: 3, estado: "Terminado" },
+    { id: 2, vehiculo: "Honda Civic", costo: 2500, horas: 5, estado: "Pendiente" },
+    { id: 3, vehiculo: "Nissan Versa", costo: 800, horas: 2, estado: "Terminado" },
+    { id: 4, vehiculo: "Ford Focus", costo: 3200, horas: 6, estado: "En proceso" },
+    { id: 5, vehiculo: "Chevrolet Aveo", costo: 1200, horas: 3, estado: "Pendiente" }
+];
 
-        return 'Peso y altura deben ser números y mayores que cero.';
+// copia del arreglo
+const copiaOriginal = [...reparaciones];
 
-    } 
+// filtrar
+const filtrados = reparaciones.filter(
+    ({ estado }) => estado === "Pendiente"
+);
 
-    let imc = peso / (altura * altura);
-    let mensaje = null;
+// costo total 
+const total = reparaciones.reduce(
+    (acumulador, { costo }) => acumulador + costo,
+    0
+);
 
-    if (imc < 18.5) {
-        mensaje = 'Peso bajo';
-    } else if (imc < 25) {
-        mensaje = 'Peso normal';
-    } else if (imc < 30) {
-        mensaje = 'Sobrepeso';
-    } else {
-        mensaje = "Obesidad";
-    }
+// costo promedio 
+const promedio = reparaciones.reduce(
+    (acumulador, { costo }) => acumulador + costo,
+    0
+) / reparaciones.length;
 
-    return mensaje;
+// ordenar costo de reparaciones de menor a mayor
+const ordenados = [...reparaciones].sort(
+    (a, b) => a.costo - b.costo
+);
 
-} 
+// optional chaining y nullish coalescing
+const primerVehiculo = reparaciones[0]?.vehiculo ?? "Sin vehículo";
 
-let peso = Number(prompt('Ingresa tu peso en kg:'));
-let altura = Number(prompt('Ingresa tu altura en metros:'));
-console.log(calcularIMC(peso, altura));
-*/
+// resultados
+console.log({
+    filtrados,
+    total,
+    promedio,
+    ordenados,
+    primerVehiculo
+});
 
-// fizzBuzz
-const fizzBuzz = n => {
-
-    if (Number.isNaN(n)
-        || n < 1) {
-        
-        console.error("Debes ingresar un número positivo válido")
-        return;
-    }
-
-    for (let i = 1; i <= n; i++) {
-        
-        if (i % 3 === 0 && i % 5 === 0) {
-            console.log('fizzBuzz')
-        } else if (i % 3 === 0) {
-            console.log('Fizz')
-        } else if (i % 5 === 0) {
-            console.log('Buzz')
-        } else {
-            console.log(i)
-        }
-        
-    }
-
-}
-
-const entrada = prompt("Ingresa un número:");
-
-if (entrada === null || entrada.trim() === "") {
-    console.error("Debes ingresar un número");
-} else {
-    fizzBuzz(Number(entrada));
-}
-
+// verificar que el arreglo original no cambió
+console.log(JSON.stringify(reparaciones) === JSON.stringify(copiaOriginal));
