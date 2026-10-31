@@ -15,6 +15,14 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
     >
 
+    <script>
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('tema') || 'dark';
+        } catch (e) {
+            document.documentElement.dataset.theme = 'dark';
+        }
+    </script>
+
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 
@@ -32,17 +40,10 @@
 
                 <div class="head">
                     <h1>Vehículos</h1>
-                    <button class="btn" id="nuevo">
-                        Registrar vehículo
-                    </button>
+                    <button class="btn" id="nuevo">Registrar vehículo</button>
                 </div>
 
-                <div
-                    class="chips"
-                    id="chips"
-                    role="group"
-                    aria-label="Filtrar por estado"
-                ></div>
+                <div class="chips" id="chips" role="group" aria-label="Filtrar por estado"></div>
 
                 <section class="card tw" aria-label="Tabla de vehículos">
                     <div id="tbl"></div>
@@ -59,17 +60,9 @@
     <script src="../app.js"></script>
 
     <script>
-        $('#nuevo').onclick = () => toast(
-            'El registro de vehículos no está incluido en esta versión.'
-        );
+        $('#nuevo').onclick = () => toast('El registro de vehículos no está incluido en esta versión.');
 
-        list(
-            $('#tbl'),
-            COLS.veh,
-            V,
-            6,
-            $('#chips')
-        );
+        list($('#tbl'), COLS.veh, V, 6, $('#chips'));
     </script>
 
 </body>

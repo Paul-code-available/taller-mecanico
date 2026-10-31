@@ -10,6 +10,33 @@
     --sans: 'Inter', 'Roboto', system-ui, sans-serif;
     --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
     --side: 232px;
+    color-scheme: dark;
+    --soft: #c8c8c8;
+    --hover: #2f2f2f;
+    --row: #2e2e2e;
+    --on-accent: #1A1A1A;
+    --accent-text: #00F1FF;
+    --accent-bg: rgba(0, 241, 255, .08);
+    --sk1: #2e2e2e;
+    --sk2: #3d3d3d;
+    --placeholder: #8a8a8a;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #F4F5F7;
+    --card: #FFFFFF;
+    --line: #D5D8DD;
+    --text: #1A1A1A;
+    --muted: #5f6670;
+    --soft: #3d444d;
+    --hover: #ECEEF1;
+    --row: #F0F2F5;
+    --accent-text: #007C87;
+    --accent-bg: rgba(0, 124, 135, .10);
+    --sk1: #E6E8EB;
+    --sk2: #F3F4F6;
+    --placeholder: #8a9099;
 }
 
 * {
@@ -63,7 +90,7 @@ a {
     height: 34px;
     border-radius: 8px;
     background: var(--cyan);
-    color: #1A1A1A;
+    color: var(--on-accent);
     font: 700 14px var(--mono);
 }
 
@@ -80,21 +107,21 @@ a {
     padding: 10px 12px;
     border-radius: 8px;
     border-left: 3px solid transparent;
-    color: #c8c8c8;
+    color: var(--soft);
     text-decoration: none;
     font-weight: 500;
     transition: .15s;
 }
 
 .nav a:hover {
-    background: #2f2f2f;
-    color: var(--cyan);
+    background: var(--hover);
+    color: var(--accent-text);
 }
 
 .nav a.active {
-    background: rgba(0, 241, 255, .08);
+    background: var(--accent-bg);
     border-left-color: var(--cyan);
-    color: var(--cyan);
+    color: var(--accent-text);
 }
 
 .nav svg {
@@ -144,7 +171,7 @@ a {
 }
 
 .search input::placeholder {
-    color: #8a8a8a;
+    color: var(--placeholder);
 }
 
 .search input:hover {
@@ -177,7 +204,7 @@ a {
     height: 36px;
     border-radius: 50%;
     border: 1px solid var(--cyan);
-    color: var(--cyan);
+    color: var(--accent-text);
     font-weight: 600;
     font-size: 13px;
 }
@@ -210,7 +237,7 @@ h2 {
 
 .btn {
     background: var(--cyan);
-    color: #1A1A1A;
+    color: var(--on-accent);
     border: 0;
     border-radius: 8px;
     padding: 10px 16px;
@@ -296,7 +323,7 @@ h2 {
 .chip {
     background: transparent;
     border: 1px solid var(--line);
-    color: #c8c8c8;
+    color: var(--soft);
     border-radius: 20px;
     padding: 6px 14px;
     font: 500 13px var(--sans);
@@ -306,13 +333,13 @@ h2 {
 
 .chip:hover {
     border-color: var(--cyan);
-    color: var(--cyan);
+    color: var(--accent-text);
 }
 
 .chip.on {
     background: var(--cyan);
     border-color: var(--cyan);
-    color: #1A1A1A;
+    color: var(--on-accent);
 }
 
 .tw {
@@ -347,7 +374,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-    background: #2e2e2e;
+    background: var(--row);
 }
 
 tbody tr:last-child td {
@@ -356,7 +383,7 @@ tbody tr:last-child td {
 
 td.id,
 .id {
-    color: var(--cyan);
+    color: var(--accent-text);
     font-weight: 600;
     font-family: var(--mono);
 }
@@ -370,19 +397,19 @@ td.id,
     padding: 3px 10px;
     border-radius: 20px;
     border: 1px solid var(--line);
-    color: #c8c8c8;
+    color: var(--soft);
     font: 600 12px var(--sans);
 }
 
 .b-on {
     border-color: var(--cyan);
-    color: var(--cyan);
+    color: var(--accent-text);
 }
 
 .b-ok {
     background: rgba(0, 241, 255, .12);
     border-color: transparent;
-    color: var(--cyan);
+    color: var(--accent-text);
 }
 
 .b-bad {
@@ -417,7 +444,7 @@ td.id,
 .sk {
     height: 14px;
     border-radius: 4px;
-    background: linear-gradient(90deg, #2e2e2e, #3d3d3d, #2e2e2e);
+    background: linear-gradient(90deg, var(--sk1), var(--sk2), var(--sk1));
     background-size: 200% 100%;
     animation: sh 1.2s linear infinite;
 }
@@ -489,4 +516,32 @@ td.id,
     .content {
         padding: 16px;
     }
+}
+
+body,
+.card,
+.sidebar,
+.topbar {
+    transition: background .2s, color .2s, border-color .2s;
+}
+
+.theme-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.theme-btn:hover {
+    border-color: var(--cyan);
+    color: var(--accent-text);
+}
+
+.theme-btn:active {
+    transform: scale(.95);
 }
