@@ -1,199 +1,139 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <title>Administrador de Taller Mecánico</title>
-
-    <meta
-        name="description"
-        content="Sistema de administración para talleres mecánicos que permite gestionar clientes, vehículos, citas, órdenes de trabajo, servicios, refacciones y pagos."
-    >
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet"
-    >
-
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Resumen · Taller Mecánico</title>
 
     <meta property="og:title" content="Administrador de Taller Mecánico">
-    <meta
-        property="og:description"
-        content="Sistema de administración para talleres mecánicos."
-    >
+    <meta property="og:description" content="Sistema de administración para talleres mecánicos.">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Administrador de Taller Mecánico">
-    <meta
-        name="twitter:description"
-        content="Sistema de administración para talleres mecánicos."
+    <meta name="twitter:description" content="Sistema de administración para talleres mecánicos.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
     >
-</head>
 
-<body>
+    <link rel="stylesheet" href="css/styles.css">
 
-    <div class="layout">
+    <body data-page="index">
 
-        <nav class="navbar layout__sidebar" aria-label="Navegación principal">
+        <div class="app">
 
-            <input
-                class="navbar__checkbox"
-                type="checkbox"
-                id="navbar-toggle"
-                aria-label="Abrir o cerrar el menú"
-            >
+            <aside class="sidebar" id="sidebar"></aside>
 
-            <div class="navbar__bar">
+            <div class="main">
 
-                <a class="navbar__logo" href="#">
-                    <img
-                        class="navbar__logo-image"
-                        src="./assets/img/logo.png"
-                        alt="Logo de la empresa"
-                    >
-                    <span class="navbar__logo-title">Taller</span>
-                </a>
+                <header class="topbar" id="topbar"></header>
 
-                <label class="navbar__toggle" for="navbar-toggle" aria-hidden="true">
-                    <span class="navbar__toggle-line"></span>
-                    <span class="navbar__toggle-line"></span>
-                    <span class="navbar__toggle-line"></span>
-                </label>
+                <main class="content">
+
+                    <div class="head">
+                        <h1>Resumen general</h1>
+                        <a class="btn" href="pages/ordenes.html">
+                            Ver órdenes
+                        </a>
+                    </div>
+
+                    <section class="kpis" id="kpis" aria-label="Indicadores"></section>
+
+                    <div class="grid">
+
+                        <section class="card tw" aria-labelledby="t1">
+
+                            <h2 id="t1" style="padding:20px 20px 0">
+                                Órdenes recientes
+                            </h2>
+
+                            <div id="tbl"></div>
+
+                        </section>
+
+                        <section class="card attn" aria-labelledby="t2">
+
+                            <h2 id="t2">Requiere atención</h2>
+
+                            <ul id="attn"></ul>
+
+                        </section>
+
+                    </div>
+
+                </main>
 
             </div>
 
-            <ul class="navbar__list">
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Inicio</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Clientes</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Vehículos</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Órdenes de trabajo</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Mecánico</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Servicios</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Refacciones</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Pagos</a>
-                </li>
-                <li class="navbar__item">
-                    <a class="navbar__link" href="#">Reportes</a>
-                </li>
-            </ul>
+        </div>
 
-        </nav>
+        <div class="toast" id="toast" role="status"></div>
 
+        <script src="app.js"></script>
 
-        <header class="header layout__header">
+        <script>
+            const late = O.filter(o => o[5] === 'Retrasada');
 
-            <input
-                class="header__search"
-                type="search"
-                placeholder="Buscar cliente, vehículo u orden..."
-                aria-label="Buscar cliente, vehículo u orden"
-            >
+            const kp = [
+                [
+                    'Órdenes activas',
+                    O.filter(o => o[5] !== 'Completada').length
+                ],
+                [
+                    'Órdenes retrasadas',
+                    late.length,
+                    'alert'
+                ],
+                [
+                    'Vehículos en taller',
+                    V.filter(v => v[6] === 'En taller').length
+                ],
+                [
+                    'Ingresos completados',
+                    money(
+                        O.filter(o => o[5] === 'Completada')
+                            .reduce((s, o) => s + o[7], 0)
+                    )
+                ]
+            ];
 
-            <div class="header__actions">
-                <button class="header__action header__action--notifications" type="button">
-                    Notificaciones
-                </button>
+            $('#kpis').innerHTML = kp.map(k => `
+                <div class="card kpi ${k[2] || ''}">
+                    <small>${k[0]}</small>
+                    <strong>${k[1]}</strong>
+                </div>
+            `).join('');
 
-                <button class="header__action header__action--account" type="button">
-                    Cuenta
-                </button>
-            </div>
+            $('#attn').innerHTML = late.length
+                ? late.map(o => `
+                    <li>
+                        <span>
+                            <span class="id">${o[0]}</span>
+                            ${badge(o[5])}
+                        </span>
 
-        </header>
-
-
-        <main class="content layout__main">
-
-            <header class="content__header">
-                <h1 class="content__title">Panel de administración</h1>
-                <time class="content__date" datetime="2026-10-13">13 de octubre de 2026</time>
-            </header>
-
-            <section class="content__section" aria-label="Resumen del taller">
-                <ul class="cards">
-
-                    <li class="cards__item">
-                        <article class="card">
-                            <h2 class="card__title">Órdenes abiertas</h2>
-                            <p class="card__value">12</p>
-                            <p class="card__text">En proceso en el taller</p>
-                        </article>
+                        <span>${o[1]} · ${o[3]}</span>
                     </li>
+                `).join('')
+                : '<li>No hay órdenes retrasadas.</li>';
 
-                    <li class="cards__item">
-                        <article class="card">
-                            <h2 class="card__title">Citas de hoy</h2>
-                            <p class="card__value">5</p>
-                            <p class="card__text">Programadas para hoy</p>
-                        </article>
-                    </li>
+            list(
+                $('#tbl'),
+                COLS.ord.filter(c =>
+                    ['Folio', 'Cliente', 'Estado', 'Total'].includes(c[0])
+                ),
+                O.slice(0, 5),
+                5,
+                null
+            );
+        </script>
 
-                    <li class="cards__item">
-                        <article class="card">
-                            <h2 class="card__title">Clientes</h2>
-                            <p class="card__value">148</p>
-                            <p class="card__text">Registrados en el sistema</p>
-                        </article>
-                    </li>
-
-                    <li class="cards__item">
-                        <article class="card">
-                            <h2 class="card__title">Vehículos</h2>
-                            <p class="card__value">203</p>
-                            <p class="card__text">Con historial de servicio</p>
-                        </article>
-                    </li>
-
-                    <li class="cards__item">
-                        <article class="card">
-                            <h2 class="card__title">Refacciones bajas</h2>
-                            <p class="card__value">7</p>
-                            <p class="card__text">Por debajo del mínimo</p>
-                        </article>
-                    </li>
-
-                    <li class="cards__item">
-                        <article class="card">
-                            <h2 class="card__title">Pagos pendientes</h2>
-                            <p class="card__value">9</p>
-                            <p class="card__text">Esperando cobro</p>
-                        </article>
-                    </li>
-
-                </ul>
-            </section>
-
-        </main>
-
-
-        <footer class="footer layout__footer">
-            <p class="footer__text">
-                &copy; 2026 Administrador de Taller Mecánico
-            </p>
-        </footer>
-
-    </div>
-
-    <script src="app.js"></script>
-</body>
+    </body>
 </html>
