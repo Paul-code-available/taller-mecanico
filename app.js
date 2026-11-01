@@ -64,6 +64,9 @@ const COLS = {
 
 /* Shell: sidebar + topbar */
 const ICON = {
+
+    inicio: '<path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/>',
+    
     ordenes: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>',
 
     vehiculos: '<path d="M4 16v-4l2-5h12l2 5v4zM4 16v2M20 16v2M4 12h16"/>',
@@ -74,6 +77,7 @@ const ICON = {
 };
 
 const NAV = [
+    ['inicio', 'Inicio'],
     ['ordenes', 'Órdenes'],
     ['vehiculos', 'Vehículos'],
     ['mecanicos', 'Mecánicos'],
@@ -81,25 +85,25 @@ const NAV = [
 ];
 
 const page = document.body.dataset.page;
+const inPages = location.pathname.includes('/pages/');
 
 $('#sidebar').innerHTML = `
-    <a class="logo" href="index.html" aria-label="Inicio">
+    <a class="logo" href="${inPages ? '../index.html' : 'index.html'}" aria-label="Inicio">
         <b>TM</b>
         <span class="lbl">Taller Mecánico</span>
     </a>
 
     <nav class="nav" aria-label="Principal">
         ${NAV.map(([k, t]) => {
-            const live = k === 'ordenes' || k === 'vehiculos';
+            const live = k === 'inicio' || k === 'ordenes' || k === 'vehiculos';
+
+            const href = k === 'inicio'
+                ? (inPages ? '../index.html' : 'index.html')
+                : (inPages ? '' : 'pages/') + k + '.html';
 
             return `
-                <a
-                    href="../pages/${live ? k + '.html' : '#'}"
-                    title="${t}"
-                    ${page === k ? 'class="active" aria-current="page"' : ''}
-                    ${live ? '' : 'data-soon'}
-                >
-                    <svg viewBox="0 0 24 24">${ICON[k]}</svg>
+                <a href="${live ? href : '#'}" title="${t}" ${page === k ? 'class="active" aria-current="page"' : ''} ${live ? '' : 'data-soon'}>
+                    <svg viewBox="0 0 24 24">${ICON[k] || ''}</svg>
                     <span class="lbl">${t}</span>
                 </a>
             `;
