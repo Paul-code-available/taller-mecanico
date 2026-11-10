@@ -545,3 +545,15 @@ body,
 .theme-btn:active {
     transform: scale(.95);
 }
+
+/*colores para errores*/
+.error-campo {
+    display: block;
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.invalido {
+    border: 1px solid #ef4444 !important;
+}

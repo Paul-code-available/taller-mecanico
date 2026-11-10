@@ -57,13 +57,63 @@
 
     <div class="toast" id="toast" role="status"></div>
 
+    <dialog id="modal-orden">
+
+    <form id="form-nueva-orden" novalidate>
+
+        <div class="campo">
+            <label for="cliente">Cliente</label>
+
+            <input
+                id="cliente"
+                name="cliente"
+                type="text"
+                required
+                minlength="3"
+                maxlength="60"
+            >
+
+            <span
+                class="error-campo"
+                data-error-para="cliente"
+            ></span>
+        </div>
+
+        <div>
+            <button type="submit">Agregar</button>
+            <button type="button" id="cerrar">Cancelar</button>
+        </div>
+
+    </form>
+
+    </dialog>
     <script src="../app.js"></script>
 
     <script>
-        $('#nuevo').onclick = () => toast('El formulario de nueva orden no está incluido en esta versión.');
 
         list($('#tbl'), COLS.ord, O, 5, $('#chips'));
+        /*
+        const modal = document.querySelector('#modal-orden');
+
+        const form = document.querySelector('#form-nueva-orden');
+
+        $('#nuevo').onclick = () => {
+            modal.showModal();
+        };
+
+        $('#cerrar').onclick = () => {
+            modal.close();
+        };
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            console.log("Formulario enviado");
+            modal.close();
+        })
+       */ 
     </script>
+
+    <script type="module" src="../js/main.js"></script>
 
 </body>
 </html>
