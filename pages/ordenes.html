@@ -57,60 +57,96 @@
 
     <div class="toast" id="toast" role="status"></div>
 
-    <dialog id="modal-orden">
+    <dialog id="modal-orden" aria-labelledby="titulo-orden">
 
-    <form id="form-nueva-orden" novalidate>
+        <form id="form-nueva-orden" class="modal-form" novalidate>
 
-        <div class="campo">
-            <label for="cliente">Cliente</label>
+            <h2 id="titulo-orden">Nueva orden de servicio</h2>
+            <p class="nota">El folio se asigna automáticamente al guardar.</p>
 
-            <input
-                id="cliente"
-                name="cliente"
-                type="text"
-                required
-                minlength="3"
-                maxlength="60"
-            >
+            <div class="campo">
+                <label for="cliente">Cliente</label>
+                <input id="cliente" name="cliente" type="text" required minlength="3" maxlength="60"
+                    pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'\-]+" autocomplete="off" placeholder="Nombre completo"
+                    aria-describedby="error-cliente">
+                <span class="error-campo" id="error-cliente" data-error-para="cliente"></span>
+            </div>
 
-            <span
-                class="error-campo"
-                data-error-para="cliente"
-            ></span>
-        </div>
+            <div class="fila">
+                <div class="campo">
+                    <label for="vehiculo">Vehículo</label>
+                    <input id="vehiculo" name="vehiculo" type="text" required minlength="3" maxlength="40"
+                        autocomplete="off" placeholder="Ej. Nissan Versa 2019" aria-describedby="error-vehiculo">
+                    <span class="error-campo" id="error-vehiculo" data-error-para="vehiculo"></span>
+                </div>
 
-        <div>
-            <button type="submit">Agregar</button>
-            <button type="button" id="cerrar">Cancelar</button>
-        </div>
+                <div class="campo">
+                    <label for="servicio">Servicio</label>
+                    <select id="servicio" name="servicio" required aria-describedby="error-servicio">
+                        <option value="">Selecciona…</option>
+                        <option>Cambio de aceite</option>
+                        <option>Cambio de frenos</option>
+                        <option>Afinación mayor</option>
+                        <option>Diagnóstico eléctrico</option>
+                        <option>Suspensión delantera</option>
+                        <option>Revisión de A/C</option>
+                        <option>Cambio de banda</option>
+                        <option>Alineación y balanceo</option>
+                    </select>
+                    <span class="error-campo" id="error-servicio" data-error-para="servicio"></span>
+                </div>
+            </div>
 
-    </form>
+            <div class="fila">
+                <div class="campo">
+                    <label for="mecanico">Mecánico</label>
+                    <select id="mecanico" name="mecanico" required aria-describedby="error-mecanico">
+                        <option value="">Selecciona…</option>
+                        <option>Luis Ortega</option>
+                        <option>Marco Ruiz</option>
+                        <option>Iván Soto</option>
+                    </select>
+                    <span class="error-campo" id="error-mecanico" data-error-para="mecanico"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="estado">Estado</label>
+                    <select id="estado" name="estado" required aria-describedby="error-estado">
+                        <option selected>Pendiente</option>
+                        <option>En proceso</option>
+                    </select>
+                    <span class="error-campo" id="error-estado" data-error-para="estado"></span>
+                </div>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="fecha">Fecha de ingreso</label>
+                    <input id="fecha" name="fecha" type="date" required aria-describedby="error-fecha">
+                    <span class="error-campo" id="error-fecha" data-error-para="fecha"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="total">Total estimado (MXN)</label>
+                    <input id="total" name="total" type="number" required min="1" max="999999" step="0.01"
+                        inputmode="decimal" placeholder="0.00" aria-describedby="error-total">
+                    <span class="error-campo" id="error-total" data-error-para="total"></span>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button type="button" class="btn btn-sec" id="cerrar">Cancelar</button>
+                <button type="submit" class="btn">Agregar orden</button>
+            </div>
+
+        </form>
 
     </dialog>
+
     <script src="../app.js"></script>
 
     <script>
-
         list($('#tbl'), COLS.ord, O, 5, $('#chips'));
-        /*
-        const modal = document.querySelector('#modal-orden');
-
-        const form = document.querySelector('#form-nueva-orden');
-
-        $('#nuevo').onclick = () => {
-            modal.showModal();
-        };
-
-        $('#cerrar').onclick = () => {
-            modal.close();
-        };
-
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            console.log("Formulario enviado");
-            modal.close();
-        })
-       */ 
     </script>
 
     <script type="module" src="../js/main.js"></script>

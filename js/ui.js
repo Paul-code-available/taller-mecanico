@@ -1,27 +1,47 @@
+/* Funciones de interfaz: muestran y limpian errores. Sin reglas de negocio. */
+
+export function limpiarError(form, nombre) {
+
+    const span = form.querySelector(`[data-error-para="${nombre}"]`);
+    const campo = form.elements[nombre];
+
+    if (span) span.textContent = "";
+
+    if (campo) {
+        campo.classList.remove("invalido");
+        campo.removeAttribute("aria-invalid");
+        campo.setCustomValidity("");
+    }
+}
+
+
 export function limpiarErrores(form) {
 
-    form.querySelectorAll("[data-error-para]")
-        .forEach(span => span.textContent = "");
+    [...form.elements]
+        .filter(campo => campo.name)
+        .forEach(campo => limpiarError(form, campo.name));
+}
 
-    form.querySelectorAll(".invalido")
-        .forEach(campo => campo.classList.remove("invalido"));
+
+/* Registra en cada campo el mensaje devuelto por validators.js */
+export function marcarInvalidos(form, errores) {
+
+    Object.entries(errores).forEach(([nombre, mensaje]) => {
+        form.elements[nombre]?.setCustomValidity(mensaje);
+    });
 }
 
 
 export function mostrarError(form, nombre, mensaje) {
 
-    const span = form.querySelector(
-        `[data-error-para="${nombre}"]`
-    );
-
+    const span = form.querySelector(`[data-error-para="${nombre}"]`);
     const campo = form.elements[nombre];
 
-    if (span) {
-        span.textContent = mensaje;
-    }
+    if (span) span.textContent = mensaje;
 
     if (campo) {
         campo.classList.add("invalido");
+        campo.setAttribute("aria-invalid", "true");
     }
 }
 

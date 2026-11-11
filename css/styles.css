@@ -557,3 +557,55 @@ body,
 .invalido {
     border: 1px solid #ef4444 !important;
 }
+
+/* ===== Modal: nueva orden ===== */
+:root{--error-text:#E58B79}
+:root[data-theme="light"]{--error-text:#A04030}
+
+dialog{
+    margin:auto;
+    width:min(580px,calc(100% - 32px));
+    max-height:calc(100dvh - 32px);
+    overflow:auto;
+    padding:0;
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow:0 24px 64px rgba(0,0,0,.5)
+}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+
+.modal-form{display:grid;gap:16px;padding:24px}
+.modal-form h2{margin:0}
+.nota{color:var(--muted);font-size:13px;margin-top:-10px}
+.fila{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+.campo{display:grid;gap:6px;align-content:start}
+.campo label{font-weight:500;font-size:13px;color:var(--soft)}
+.campo input,.campo select{
+    width:100%;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:8px;
+    color:var(--text);
+    padding:10px 12px;
+    font:inherit;
+    transition:.15s
+}
+.campo input[type=number],.campo input[type=date]{font-family:var(--mono)}
+.campo input::placeholder{color:var(--placeholder)}
+.campo input:hover,.campo select:hover{border-color:#5a5a5a}
+.campo input:focus,.campo select:focus{border-color:var(--cyan)}
+.campo .invalido{border-color:var(--red);background:rgba(160,64,48,.1)}
+
+.error-campo{min-height:18px;color:var(--error-text);font-size:12px}
+
+.acciones{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
+.btn-sec{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn-sec:hover{border-color:var(--cyan);color:var(--accent-text);box-shadow:none}
+
+@media(max-width:700px){
+    .fila{grid-template-columns:1fr}
+    .modal-form{padding:18px}
+}
