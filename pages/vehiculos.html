@@ -62,11 +62,81 @@
 
     <div class="toast" id="toast" role="status"></div>
 
+    <dialog id="modal-vehiculo" aria-labelledby="titulo-vehiculo">
+
+        <form id="form-nuevo-vehiculo" class="modal-form" novalidate>
+
+            <h2 id="titulo-vehiculo">Registrar vehículo</h2>
+            <p class="nota">Los datos se guardan en este navegador.</p>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="placa">Placa</label>
+                    <input id="placa" name="placa" type="text" required minlength="5" maxlength="10" pattern="[A-Za-z0-9\-]{5,10}" autocomplete="off" placeholder="BCS-421-A" style="text-transform:uppercase" aria-describedby="error-placa">
+                    <span class="error-campo" id="error-placa" data-error-para="placa"></span>
+                </div>
+                <div class="campo">
+                    <label for="estado">Estado</label>
+                    <select id="estado" name="estado" required aria-describedby="error-estado">
+                        <option selected>En espera</option>
+                        <option>En taller</option>
+                    </select>
+                    <span class="error-campo" id="error-estado" data-error-para="estado"></span>
+                </div>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="vehiculo">Marca y modelo</label>
+                    <input id="vehiculo" name="vehiculo" type="text" required minlength="3" maxlength="40" autocomplete="off" placeholder="Ej. Nissan Versa" aria-describedby="error-vehiculo">
+                    <span class="error-campo" id="error-vehiculo" data-error-para="vehiculo"></span>
+                </div>
+                <div class="campo">
+                    <label for="anio">Año</label>
+                    <input id="anio" name="anio" type="number" required min="1980" max="2100" step="1" inputmode="numeric" placeholder="2019" aria-describedby="error-anio">
+                    <span class="error-campo" id="error-anio" data-error-para="anio"></span>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label for="cliente">Cliente</label>
+                <input id="cliente" name="cliente" type="text" required minlength="3" maxlength="60" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'\-]+" autocomplete="off" placeholder="Nombre completo" aria-describedby="error-cliente">
+                <span class="error-campo" id="error-cliente" data-error-para="cliente"></span>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="km">Kilometraje</label>
+                    <input id="km" name="km" type="number" required min="0" max="999999" step="1" inputmode="numeric" placeholder="0" aria-describedby="error-km">
+                    <span class="error-campo" id="error-km" data-error-para="km"></span>
+                </div>
+                <div class="campo">
+                    <label for="ultimaVisita">Última visita</label>
+                    <input id="ultimaVisita" name="ultimaVisita" type="date" required aria-describedby="error-ultimaVisita">
+                    <span class="error-campo" id="error-ultimaVisita" data-error-para="ultimaVisita"></span>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button type="button" class="btn btn-sec" id="cerrar">Cancelar</button>
+                <button type="submit" class="btn">Registrar vehículo</button>
+            </div>
+
+        </form>
+
+    </dialog>
+
     <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="../app.js"></script>
+
     <script>
-        list($('#tbl'), COLS.veh, cargarVehiculos, 'estado', $('#chips'));
+        const tabla = list($('#tbl'), COLS.veh, cargarVehiculos, 'estado', $('#chips'));
+
+        // vehiculos.js avisa cuando se guarda un vehículo nuevo
+        document.addEventListener('vehiculos:cambio', tabla.recargar);
     </script>
+
+    <script type="module" src="../js/vehiculos.js"></script>
 
 </body>
 </html>

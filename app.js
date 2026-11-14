@@ -81,6 +81,7 @@ const LS = {
 };
 
 const KEY_ORDENES = 'ordenes_nuevas';
+const KEY_VEHICULOS = 'vehiculos_nuevos';  
 
 /* Órdenes guardadas por el usuario (primero) + órdenes del JSON */
 async function cargarOrdenes() {
@@ -88,7 +89,29 @@ async function cargarOrdenes() {
     return [...LS.leer(KEY_ORDENES), ...base];
 }
 
-const cargarVehiculos = () => cargarJSON('data/vehiculos.json');
+/* Vehículos guardados por el usuario (primero) + vehículos del JSON */
+async function cargarVehiculos() {
+    const base = await cargarJSON('data/vehiculos.json');
+    return [...LS.leer(KEY_VEHICULOS), ...base];
+}
+
+async function guardarVehiculo(datos) {
+    const vehiculo = {
+        placa: datos.placa.trim().toUpperCase(),
+        vehiculo: datos.vehiculo.trim(),
+        anio: Number(datos.anio),
+        cliente: datos.cliente.trim(),
+        km: Number(datos.km),
+        ultimaVisita: datos.ultimaVisita,
+        estado: datos.estado
+    };
+
+    if (!LS.guardar(KEY_VEHICULOS, [vehiculo, ...LS.leer(KEY_VEHICULOS)])) {
+        throw new Error('El navegador no permitió guardar los datos.');
+    }
+
+    return vehiculo;
+}
 
 async function guardarOrden(datos) {
     const todas = await cargarOrdenes();
