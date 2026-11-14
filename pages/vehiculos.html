@@ -17,7 +17,12 @@
 
     <script>
         try {
-            document.documentElement.dataset.theme = localStorage.getItem('tema') || 'dark';
+            const guardado = localStorage.getItem('tema');
+
+            document.documentElement.dataset.theme =
+                guardado === 'light' || guardado === 'dark'
+                    ? guardado
+                    : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         } catch (e) {
             document.documentElement.dataset.theme = 'dark';
         }
@@ -57,12 +62,10 @@
 
     <div class="toast" id="toast" role="status"></div>
 
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="../app.js"></script>
-
     <script>
-        $('#nuevo').onclick = () => toast('El registro de vehículos no está incluido en esta versión.');
-
-        list($('#tbl'), COLS.veh, V, 6, $('#chips'));
+        list($('#tbl'), COLS.veh, cargarVehiculos, 'estado', $('#chips'));
     </script>
 
 </body>

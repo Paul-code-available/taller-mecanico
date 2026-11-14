@@ -609,3 +609,6 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
     .fila{grid-template-columns:1fr}
     .modal-form{padding:18px}
 }
+
+.swal2-popup .swal2-styled.swal2-confirm{color:var(--on-accent);font-weight:600}
+.swal2-popup .swal2-styled.swal2-cancel{color:var(--text)}

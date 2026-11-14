@@ -1,0 +1,82 @@
+[
+  {
+    "folio": "OS-1042",
+    "cliente": "Carlos Mendoza",
+    "vehiculo": "Nissan Versa 2019",
+    "servicio": "Cambio de frenos",
+    "mecanico": "Luis Ortega",
+    "estado": "En proceso",
+    "fecha": "2026-10-29",
+    "total": 2850
+  },
+  {
+    "folio": "OS-1041",
+    "cliente": "Ana Robles",
+    "vehiculo": "Toyota Hilux 2021",
+    "servicio": "Afinación mayor",
+    "mecanico": "Marco Ruiz",
+    "estado": "Completada",
+    "fecha": "2026-10-28",
+    "total": 3400
+  },
+  {
+    "folio": "OS-1040",
+    "cliente": "Jorge Pineda",
+    "vehiculo": "VW Jetta 2017",
+    "servicio": "Diagnóstico eléctrico",
+    "mecanico": "Luis Ortega",
+    "estado": "Retrasada",
+    "fecha": "2026-10-24",
+    "total": 1200
+  },
+  {
+    "folio": "OS-1039",
+    "cliente": "Sofía Lara",
+    "vehiculo": "Chevrolet Aveo 2015",
+    "servicio": "Cambio de aceite",
+    "mecanico": "Marco Ruiz",
+    "estado": "Completada",
+    "fecha": "2026-10-27",
+    "total": 890
+  },
+  {
+    "folio": "OS-1038",
+    "cliente": "Raúl Cota",
+    "vehiculo": "Ford Ranger 2020",
+    "servicio": "Suspensión delantera",
+    "mecanico": "Iván Soto",
+    "estado": "En proceso",
+    "fecha": "2026-10-30",
+    "total": 5600
+  },
+  {
+    "folio": "OS-1037",
+    "cliente": "Marta Núñez",
+    "vehiculo": "Honda CR-V 2018",
+    "servicio": "Revisión de A/C",
+    "mecanico": "Iván Soto",
+    "estado": "Pendiente",
+    "fecha": "2026-10-31",
+    "total": 1750
+  },
+  {
+    "folio": "OS-1036",
+    "cliente": "Pedro Gámez",
+    "vehiculo": "Mazda 3 2016",
+    "servicio": "Cambio de banda",
+    "mecanico": "Marco Ruiz",
+    "estado": "Retrasada",
+    "fecha": "2026-10-22",
+    "total": 2300
+  },
+  {
+    "folio": "OS-1035",
+    "cliente": "Elena Ibarra",
+    "vehiculo": "Kia Rio 2022",
+    "servicio": "Alineación y balanceo",
+    "mecanico": "Luis Ortega",
+    "estado": "Completada",
+    "fecha": "2026-10-26",
+    "total": 980
+  }
+]

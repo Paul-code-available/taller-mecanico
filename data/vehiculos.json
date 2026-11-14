@@ -1,0 +1,74 @@
+[
+  {
+    "placa": "BCS-421-A",
+    "vehiculo": "Nissan Versa",
+    "anio": 2019,
+    "cliente": "Carlos Mendoza",
+    "km": 84200,
+    "ultimaVisita": "2026-10-29",
+    "estado": "En taller"
+  },
+  {
+    "placa": "BCS-118-C",
+    "vehiculo": "Toyota Hilux",
+    "anio": 2021,
+    "cliente": "Ana Robles",
+    "km": 52100,
+    "ultimaVisita": "2026-10-28",
+    "estado": "Entregado"
+  },
+  {
+    "placa": "BCS-907-B",
+    "vehiculo": "Volkswagen Jetta",
+    "anio": 2017,
+    "cliente": "Jorge Pineda",
+    "km": 121500,
+    "ultimaVisita": "2026-10-24",
+    "estado": "En taller"
+  },
+  {
+    "placa": "BCS-355-D",
+    "vehiculo": "Chevrolet Aveo",
+    "anio": 2015,
+    "cliente": "Sofía Lara",
+    "km": 156800,
+    "ultimaVisita": "2026-10-27",
+    "estado": "Entregado"
+  },
+  {
+    "placa": "BCS-642-A",
+    "vehiculo": "Ford Ranger",
+    "anio": 2020,
+    "cliente": "Raúl Cota",
+    "km": 67300,
+    "ultimaVisita": "2026-10-30",
+    "estado": "En taller"
+  },
+  {
+    "placa": "BCS-290-E",
+    "vehiculo": "Honda CR-V",
+    "anio": 2018,
+    "cliente": "Marta Núñez",
+    "km": 98400,
+    "ultimaVisita": "2026-10-31",
+    "estado": "En espera"
+  },
+  {
+    "placa": "BCS-775-F",
+    "vehiculo": "Mazda 3",
+    "anio": 2016,
+    "cliente": "Pedro Gámez",
+    "km": 133900,
+    "ultimaVisita": "2026-10-22",
+    "estado": "En taller"
+  },
+  {
+    "placa": "BCS-503-B",
+    "vehiculo": "Kia Rio",
+    "anio": 2022,
+    "cliente": "Elena Ibarra",
+    "km": 21700,
+    "ultimaVisita": "2026-10-26",
+    "estado": "Entregado"
+  }
+]

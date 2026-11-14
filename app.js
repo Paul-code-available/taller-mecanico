@@ -5,6 +5,39 @@ const money = n => n.toLocaleString('es-MX', {
     currency: 'MXN'
 });
 
+/* Crea elementos con la API del DOM. Los textos se insertan como nodos de texto
+   (nunca como HTML), así que el contenido del usuario no puede inyectar código. */
+function el(tag, props = {}, ...hijos) {
+    const e = document.createElement(tag);
+
+    for (const [k, v] of Object.entries(props)) {
+        if (v == null || v === false) continue;
+
+        if (k === 'class') e.className = v;
+        else if (k === 'text') e.textContent = v;
+        else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+        else e.setAttribute(k, v === true ? '' : v);
+    }
+
+    e.append(...hijos.flat().filter(h => h != null && h !== false));
+    return e;
+}
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function icono(formas) {
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+
+    formas.forEach(([tag, attrs]) => {
+        const n = document.createElementNS(SVG_NS, tag);
+        Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
+        svg.append(n);
+    });
+
+    return svg;
+}
+
 const BADGE = {
     'En proceso': 'b-on',
     'En taller': 'b-on',
@@ -13,67 +46,110 @@ const BADGE = {
     'Retrasada': 'b-bad'
 };
 
-const badge = s => `<span class="badge ${BADGE[s] || ''}">${s}</span>`;
+const badge = s => el('span', { class: 'badge ' + (BADGE[s] || ''), text: s });
 
-/* Datos de ejemplo (estáticos) */
-const O = [
-    ['OS-1042', 'Carlos Mendoza', 'Nissan Versa 2019', 'Cambio de frenos', 'Luis Ortega', 'En proceso', '2026-10-29', 2850],
-    ['OS-1041', 'Ana Robles', 'Toyota Hilux 2021', 'Afinación mayor', 'Marco Ruiz', 'Completada', '2026-10-28', 3400],
-    ['OS-1040', 'Jorge Pineda', 'VW Jetta 2017', 'Diagnóstico eléctrico', 'Luis Ortega', 'Retrasada', '2026-10-24', 1200],
-    ['OS-1039', 'Sofía Lara', 'Chevrolet Aveo 2015', 'Cambio de aceite', 'Marco Ruiz', 'Completada', '2026-10-27', 890],
-    ['OS-1038', 'Raúl Cota', 'Ford Ranger 2020', 'Suspensión delantera', 'Iván Soto', 'En proceso', '2026-10-30', 5600],
-    ['OS-1037', 'Marta Núñez', 'Honda CR-V 2018', 'Revisión de A/C', 'Iván Soto', 'Pendiente', '2026-10-31', 1750],
-    ['OS-1036', 'Pedro Gámez', 'Mazda 3 2016', 'Cambio de banda', 'Marco Ruiz', 'Retrasada', '2026-10-22', 2300],
-    ['OS-1035', 'Elena Ibarra', 'Kia Rio 2022', 'Alineación y balanceo', 'Luis Ortega', 'Completada', '2026-10-26', 980]
-];
+const page = document.body.dataset.page;
+const inPages = location.pathname.includes('/pages/');
+const BASE = inPages ? '../' : '';
 
-const V = [
-    ['BCS-421-A', 'Nissan Versa', 2019, 'Carlos Mendoza', 84200, '2026-10-29', 'En taller'],
-    ['BCS-118-C', 'Toyota Hilux', 2021, 'Ana Robles', 52100, '2026-10-28', 'Entregado'],
-    ['BCS-907-B', 'Volkswagen Jetta', 2017, 'Jorge Pineda', 121500, '2026-10-24', 'En taller'],
-    ['BCS-355-D', 'Chevrolet Aveo', 2015, 'Sofía Lara', 156800, '2026-10-27', 'Entregado'],
-    ['BCS-642-A', 'Ford Ranger', 2020, 'Raúl Cota', 67300, '2026-10-30', 'En taller'],
-    ['BCS-290-E', 'Honda CR-V', 2018, 'Marta Núñez', 98400, '2026-10-31', 'En espera'],
-    ['BCS-775-F', 'Mazda 3', 2016, 'Pedro Gámez', 133900, '2026-10-22', 'En taller'],
-    ['BCS-503-B', 'Kia Rio', 2022, 'Elena Ibarra', 21700, '2026-10-26', 'Entregado']
-];
+/* ===== Datos: fetch (JSON) + localStorage ===== */
+async function cargarJSON(ruta) {
+    const res = await fetch(BASE + ruta);
 
-/* Columnas: [encabezado, render(fila), clase] */
+    if (!res.ok) throw new Error(`No se pudo leer ${ruta} (error ${res.status}).`);
+
+    return res.json();
+}
+
+const LS = {
+    leer(clave, porDefecto = []) {
+        try {
+            return JSON.parse(localStorage.getItem(clave)) ?? porDefecto;
+        } catch (e) {
+            return porDefecto;
+        }
+    },
+
+    guardar(clave, valor) {
+        try {
+            localStorage.setItem(clave, JSON.stringify(valor));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+};
+
+const KEY_ORDENES = 'ordenes_nuevas';
+
+/* Órdenes guardadas por el usuario (primero) + órdenes del JSON */
+async function cargarOrdenes() {
+    const base = await cargarJSON('data/ordenes.json');
+    return [...LS.leer(KEY_ORDENES), ...base];
+}
+
+const cargarVehiculos = () => cargarJSON('data/vehiculos.json');
+
+async function guardarOrden(datos) {
+    const todas = await cargarOrdenes();
+    const ultimo = Math.max(0, ...todas.map(o => parseInt(o.folio.slice(3), 10) || 0));
+
+    const orden = {
+        folio: 'OS-' + (ultimo + 1),
+        cliente: datos.cliente.trim(),
+        vehiculo: datos.vehiculo.trim(),
+        servicio: datos.servicio,
+        mecanico: datos.mecanico,
+        estado: datos.estado,
+        fecha: datos.fecha,
+        total: Number(datos.total)
+    };
+
+    if (!LS.guardar(KEY_ORDENES, [orden, ...LS.leer(KEY_ORDENES)])) {
+        throw new Error('El navegador no permitió guardar los datos.');
+    }
+
+    return orden;
+}
+
+/* Columnas: [encabezado, render(fila) -> texto o nodo, clase] */
 const COLS = {
     ord: [
-        ['Folio', r => r[0], 'id'],
-        ['Cliente', r => r[1]],
-        ['Vehículo', r => r[2]],
-        ['Servicio', r => r[3]],
-        ['Mecánico', r => r[4]],
-        ['Estado', r => badge(r[5])],
-        ['Fecha', r => r[6]],
-        ['Total', r => money(r[7]), 'r']
+        ['Folio', r => r.folio, 'id'],
+        ['Cliente', r => r.cliente],
+        ['Vehículo', r => r.vehiculo],
+        ['Servicio', r => r.servicio],
+        ['Mecánico', r => r.mecanico],
+        ['Estado', r => badge(r.estado)],
+        ['Fecha', r => r.fecha],
+        ['Total', r => money(r.total), 'r']
     ],
 
     veh: [
-        ['Placa', r => r[0], 'id'],
-        ['Vehículo', r => r[1]],
-        ['Año', r => r[2]],
-        ['Cliente', r => r[3]],
-        ['Kilometraje', r => r[4].toLocaleString('es-MX') + ' km', 'r'],
-        ['Última visita', r => r[5]],
-        ['Estado', r => badge(r[6])]
+        ['Placa', r => r.placa, 'id'],
+        ['Vehículo', r => r.vehiculo],
+        ['Año', r => r.anio],
+        ['Cliente', r => r.cliente],
+        ['Kilometraje', r => r.km.toLocaleString('es-MX') + ' km', 'r'],
+        ['Última visita', r => r.ultimaVisita],
+        ['Estado', r => badge(r.estado)]
     ]
 };
 
 /* Shell: sidebar + topbar */
 const ICON = {
+    inicio: [['path', { d: 'M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10' }]],
 
-    inicio: '<path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/>',
-    
-    ordenes: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>',
+    ordenes: [
+        ['rect', { x: 5, y: 4, width: 14, height: 17, rx: 2 }],
+        ['path', { d: 'M9 4h6v3H9zM9 12h6M9 16h4' }]
+    ],
 
-    vehiculos: '<path d="M4 16v-4l2-5h12l2 5v4zM4 16v2M20 16v2M4 12h16"/>',
+    vehiculos: [['path', { d: 'M4 16v-4l2-5h12l2 5v4zM4 16v2M20 16v2M4 12h16' }]],
 
-    mecanicos: '<path d="M14 6a4 4 0 0 0 5 5l-9 9a2 2 0 0 1-3-3l9-9"/>',
+    mecanicos: [['path', { d: 'M14 6a4 4 0 0 0 5 5l-9 9a2 2 0 0 1-3-3l9-9' }]],
 
-    inventario: '<path d="M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8"/>'
+    inventario: [['path', { d: 'M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8' }]]
 };
 
 const NAV = [
@@ -84,63 +160,58 @@ const NAV = [
     ['inventario', 'Inventario']
 ];
 
-const page = document.body.dataset.page;
-const inPages = location.pathname.includes('/pages/');
+const HREF_INICIO = inPages ? '../index.html' : 'index.html';
 
-$('#sidebar').innerHTML = `
-    <a class="logo" href="${inPages ? '../index.html' : 'index.html'}" aria-label="Inicio">
-        <b>TM</b>
-        <span class="lbl">Taller Mecánico</span>
-    </a>
+$('#sidebar').replaceChildren(
+    el('a', { class: 'logo', href: HREF_INICIO, 'aria-label': 'Inicio' },
+        el('b', { text: 'TM' }),
+        el('span', { class: 'lbl', text: 'Taller Mecánico' })
+    ),
 
-    <nav class="nav" aria-label="Principal">
-        ${NAV.map(([k, t]) => {
+    el('nav', { class: 'nav', 'aria-label': 'Principal' },
+        NAV.map(([k, t]) => {
             const live = k === 'inicio' || k === 'ordenes' || k === 'vehiculos';
+            const href = k === 'inicio' ? HREF_INICIO : (inPages ? '' : 'pages/') + k + '.html';
 
-            const href = k === 'inicio'
-                ? (inPages ? '../index.html' : 'index.html')
-                : (inPages ? '' : 'pages/') + k + '.html';
+            return el('a', {
+                href: live ? href : '#',
+                title: t,
+                class: page === k ? 'active' : null,
+                'aria-current': page === k ? 'page' : null,
+                'data-soon': !live
+            },
+                icono(ICON[k] || []),
+                el('span', { class: 'lbl', text: t })
+            );
+        })
+    )
+);
 
-            return `
-                <a href="${live ? href : '#'}" title="${t}" ${page === k ? 'class="active" aria-current="page"' : ''} ${live ? '' : 'data-soon'}>
-                    <svg viewBox="0 0 24 24">${ICON[k] || ''}</svg>
-                    <span class="lbl">${t}</span>
-                </a>
-            `;
-        }).join('')}
-    </nav>
-`;
+$('#topbar').replaceChildren(
+    el('div', { class: 'search' },
+        el('input', {
+            id: 'q',
+            type: 'search',
+            placeholder: 'Buscar orden, vehículo, mecánico, pieza, etc...',
+            'aria-label': 'Búsqueda global'
+        })
+    ),
 
-$('#topbar').innerHTML = `
-    <div class="search">
-        <input
-            id="q"
-            type="search"
-            placeholder="Buscar orden, vehículo, mecánico, pieza, etc..."
-            aria-label="Búsqueda global"
-        >
-    </div>
-
-    <div class="user">
-        <button class="theme-btn" id="theme" type="button"></button>
-
-        <div class="lbl">
-            Administrador
-            <small>Taller Central</small>
-        </div>
-
-        <span class="av">AD</span>
-    </div>
-`;
+    el('div', { class: 'user' },
+        el('button', { class: 'theme-btn', id: 'theme', type: 'button' }),
+        el('div', { class: 'lbl' }, 'Administrador', el('small', { text: 'Taller Central' })),
+        el('span', { class: 'av', text: 'AD' })
+    )
+);
 
 const root = document.documentElement;
 
-function setTheme(t) {
-    root.dataset.theme = t;
+/* Tema: se guarda solo cuando el usuario lo elige; si no ha elegido, sigue al sistema */
+const TEMA_KEY = 'tema';
+const prefiereClaro = matchMedia('(prefers-color-scheme: light)');
 
-    try {
-        localStorage.setItem('tema', t);
-    } catch (e) {}
+function aplicarTema(t) {
+    root.dataset.theme = t;
 
     const b = $('#theme');
     const l = t === 'dark'
@@ -152,11 +223,38 @@ function setTheme(t) {
     b.setAttribute('aria-label', l);
 }
 
-setTheme(root.dataset.theme || 'dark');
+function elegirTema(t) {
+    aplicarTema(t);
 
-$('#theme').onclick = () => setTheme(
+    try {
+        localStorage.setItem(TEMA_KEY, t);
+    } catch (e) {}
+}
+
+const hayTemaGuardado = () => {
+    try {
+        return ['light', 'dark'].includes(localStorage.getItem(TEMA_KEY));
+    } catch (e) {
+        return false;
+    }
+};
+
+// Tema inicial (ya lo definió el script del <head>); aquí solo se sincroniza el botón
+aplicarTema(root.dataset.theme || 'dark');
+
+$('#theme').onclick = () => elegirTema(
     root.dataset.theme === 'dark' ? 'light' : 'dark'
 );
+
+// Si el usuario no ha elegido, se sigue el cambio del sistema operativo
+prefiereClaro.addEventListener('change', e => {
+    if (!hayTemaGuardado()) aplicarTema(e.matches ? 'light' : 'dark');
+});
+
+// Si lo cambia en otra pestaña, esta se actualiza
+addEventListener('storage', e => {
+    if (e.key === TEMA_KEY && ['light', 'dark'].includes(e.newValue)) aplicarTema(e.newValue);
+});
 
 let tt;
 
@@ -178,79 +276,109 @@ document.querySelectorAll('[data-soon]').forEach(a => {
     });
 });
 
-/* Tabla con estados: carga, vacío, error. Vista previa: ?estado=error | ?estado=vacio */
-function table(host, cols, rows) {
-    host.innerHTML = rows.length
-        ? `
-            <table>
-                <thead>
-                    <tr>
-                        ${cols.map(c => `
-                            <th class="${c[2] === 'r' ? 'r' : ''}">${c[0]}</th>
-                        `).join('')}
-                    </tr>
-                </thead>
+/* SweetAlert2 con los colores del tema actual */
+function swalTema() {
+    const css = getComputedStyle(root);
+    const v = n => css.getPropertyValue(n).trim();
 
-                <tbody>
-                    ${rows.map(r => `
-                        <tr>
-                            ${cols.map(c => `
-                                <td class="${c[2] || ''}">${c[1](r)}</td>
-                            `).join('')}
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `
-        : '<div class="state">No hay registros para mostrar. Cambia el filtro o la búsqueda.</div>';
+    return {
+        background: v('--card'),
+        color: v('--text'),
+        confirmButtonColor: v('--cyan'),
+        cancelButtonColor: v('--line')
+    };
 }
 
-function list(host, cols, all, si, chipsEl) {
+/* Tabla con estados: carga, error (con reintento) y vacío.
+   Vista previa: ?estado=error | ?estado=vacio */
+function table(host, cols, rows) {
+    if (!rows.length) {
+        host.replaceChildren(el('div', {
+            class: 'state',
+            text: 'No hay registros para mostrar. Cambia el filtro o la búsqueda.'
+        }));
+        return;
+    }
+
+    host.replaceChildren(el('table', {},
+        el('thead', {},
+            el('tr', {}, cols.map(c => el('th', { class: c[2] === 'r' ? 'r' : null, text: c[0] })))
+        ),
+        el('tbody', {},
+            rows.map(r => el('tr', {}, cols.map(c => el('td', { class: c[2] || null }, c[1](r)))))
+        )
+    ));
+}
+
+/* fuente: función async que devuelve las filas. Devuelve { recargar }. */
+function list(host, cols, fuente, key, chipsEl) {
     const mode = new URLSearchParams(location.search).get('estado');
 
     let q = '';
     let f = 'Todos';
-    let rows = all;
+    let rows = [];
+    let listo = false;
 
     const draw = () => table(
         host,
         cols,
         rows.filter(r =>
-            (f === 'Todos' || r[si] === f) &&
-            r.join(' ').toLowerCase().includes(q)
+            (f === 'Todos' || r[key] === f) &&
+            Object.values(r).join(' ').toLowerCase().includes(q)
         )
     );
 
-    host.innerHTML = `
-        <div class="skl">
-            ${'<div class="sk"></div>'.repeat(5)}
-        </div>
-    `;
+    async function cargar() {
+        listo = false;
 
-    setTimeout(() => {
-        if (mode === 'error') {
-            host.innerHTML = `
-                <div class="state err">
-                    <strong>No se pudieron cargar los datos.</strong>
-                    <span>Revisa tu conexión e inténtalo de nuevo.</span>
-                    <button class="btn" onclick="location.href=location.pathname">
-                        Reintentar
-                    </button>
-                </div>
-            `;
+        host.replaceChildren(
+            el('div', { class: 'skl', role: 'status', 'aria-live': 'polite' },
+                el('span', { style: 'color:var(--muted)', text: 'Cargando datos…' }),
+                Array.from({ length: 4 }, () => el('div', { class: 'sk' }))
+            )
+        );
+
+        try {
+            if (mode === 'error') throw new Error('Error simulado (?estado=error).');
+
+            rows = mode === 'vacio' ? [] : await fuente();
+
+        } catch (err) {
+            const msg = err instanceof TypeError
+                ? 'No hay conexión con el servidor.'
+                : err instanceof SyntaxError
+                    ? 'El archivo de datos no tiene un formato válido.'
+                    : err.message;
+
+            host.replaceChildren(
+                el('div', { class: 'state err' },
+                    el('strong', { text: 'No se pudieron cargar los datos.' }),
+                    el('span', { text: msg }),
+                    el('button', { class: 'btn', type: 'button', text: 'Reintentar', onclick: cargar })
+                )
+            );
+
+            if (window.Swal) {
+                Swal.fire({
+                    ...swalTema(),
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'No se pudieron cargar los datos',
+                    showConfirmButton: false,
+                    timer: 3500
+                });
+            }
 
             return;
         }
 
-        if (mode === 'vacio') rows = [];
-
         if (chipsEl) {
-            chipsEl.innerHTML = [
-                'Todos',
-                ...new Set(all.map(r => r[si]))
-            ].map(s => `
-                <button class="chip${s === f ? ' on' : ''}">${s}</button>
-            `).join('');
+            chipsEl.replaceChildren(
+                ...['Todos', ...new Set(rows.map(r => r[key]))].map(s =>
+                    el('button', { class: 'chip' + (s === f ? ' on' : ''), type: 'button', text: s })
+                )
+            );
 
             chipsEl.onclick = e => {
                 if (!e.target.classList.contains('chip')) return;
@@ -265,14 +393,17 @@ function list(host, cols, all, si, chipsEl) {
             };
         }
 
+        listo = true;
         draw();
-    }, 650);
+    }
 
     $('#q').addEventListener('input', e => {
         q = e.target.value.toLowerCase().trim();
 
-        if (host.querySelector('table') || host.querySelector('.state:not(.err)')) {
-            draw();
-        }
+        if (listo) draw();
     });
+
+    cargar();
+
+    return { recargar: cargar };
 }

@@ -22,117 +22,110 @@
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
     >
+
+    <script>
+        try {
+            const guardado = localStorage.getItem('tema');
+
+            document.documentElement.dataset.theme =
+                guardado === 'light' || guardado === 'dark'
+                    ? guardado
+                    : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        } catch (e) {
+            document.documentElement.dataset.theme = 'dark';
+        }
+    </script>
+
     <link rel="stylesheet" href="css/styles.css">
+</head>
 
-    <body data-page="inicio">
+<body data-page="inicio">
 
-        <div class="app">
+    <div class="app">
 
-            <aside class="sidebar" id="sidebar"></aside>
+        <aside class="sidebar" id="sidebar"></aside>
 
-            <div class="main">
+        <div class="main">
 
-                <header class="topbar" id="topbar"></header>
+            <header class="topbar" id="topbar"></header>
 
-                <main class="content">
+            <main class="content">
 
-                    <div class="head">
-                        <h1>Resumen general</h1>
-                        <a class="btn" href="pages/ordenes.html">
-                            Ver órdenes
-                        </a>
-                    </div>
+                <div class="head">
+                    <h1>Resumen general</h1>
+                    <a class="btn" href="pages/ordenes.html">Ver órdenes</a>
+                </div>
 
-                    <section class="kpis" id="kpis" aria-label="Indicadores"></section>
+                <section class="kpis" id="kpis" aria-label="Indicadores"></section>
 
-                    <div class="grid">
+                <div class="grid">
 
-                        <section class="card tw" aria-labelledby="t1">
+                    <section class="card tw" aria-labelledby="t1">
+                        <h2 id="t1" style="padding:20px 20px 0">Órdenes recientes</h2>
+                        <div id="tbl"></div>
+                    </section>
 
-                            <h2 id="t1" style="padding:20px 20px 0">
-                                Órdenes recientes
-                            </h2>
+                    <section class="card attn" aria-labelledby="t2">
+                        <h2 id="t2">Requiere atención</h2>
+                        <ul id="attn"></ul>
+                    </section>
 
-                            <div id="tbl"></div>
+                </div>
 
-                        </section>
-
-                        <section class="card attn" aria-labelledby="t2">
-
-                            <h2 id="t2">Requiere atención</h2>
-
-                            <ul id="attn"></ul>
-
-                        </section>
-
-                    </div>
-
-                </main>
-
-            </div>
+            </main>
 
         </div>
 
-        <div class="toast" id="toast" role="status"></div>
+    </div>
 
-        <script src="app.js"></script>
+    <div class="toast" id="toast" role="status"></div>
 
-        <script>
-            const late = O.filter(o => o[5] === 'Retrasada');
+    <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="app.js"></script>
 
-            const kp = [
-                [
-                    'Órdenes activas',
-                    O.filter(o => o[5] !== 'Completada').length
-                ],
-                [
-                    'Órdenes retrasadas',
-                    late.length,
-                    'alert'
-                ],
-                [
-                    'Vehículos en taller',
-                    V.filter(v => v[6] === 'En taller').length
-                ],
-                [
-                    'Ingresos completados',
-                    money(
-                        O.filter(o => o[5] === 'Completada')
-                            .reduce((s, o) => s + o[7], 0)
+    <script>
+        const kpis = $('#kpis'), attn = $('#attn');
+
+        kpis.replaceChildren(el('div', {
+            class: 'card state', style: 'grid-column:1/-1', role: 'status', text: 'Cargando indicadores…'
+        }));
+
+        (async () => {
+            try {
+                const [O, V] = await Promise.all([cargarOrdenes(), cargarVehiculos()]);
+                const late = O.filter(o => o.estado === 'Retrasada');
+                const kp = [
+                    ['Órdenes activas', O.filter(o => o.estado !== 'Completada').length],
+                    ['Órdenes retrasadas', late.length, 'alert'],
+                    ['Vehículos en taller', V.filter(v => v.estado === 'En taller').length],
+                    ['Ingresos completados', money(O.filter(o => o.estado === 'Completada').reduce((s, o) => s + o.total, 0))]
+                ];
+
+                kpis.replaceChildren(...kp.map(([t, v, extra]) =>
+                    el('div', { class: 'card kpi ' + (extra || '') },
+                        el('small', { text: t }),
+                        el('strong', { text: v })
                     )
-                ]
-            ];
+                ));
 
-            $('#kpis').innerHTML = kp.map(k => `
-                <div class="card kpi ${k[2] || ''}">
-                    <small>${k[0]}</small>
-                    <strong>${k[1]}</strong>
-                </div>
-            `).join('');
+                attn.replaceChildren(...(late.length
+                    ? late.map(o => el('li', {},
+                        el('span', {}, el('span', { class: 'id', text: o.folio }), ' ', badge(o.estado)),
+                        el('span', { text: `${o.cliente} · ${o.servicio}` })
+                    ))
+                    : [el('li', { text: 'No hay órdenes retrasadas.' })]
+                ));
+            } catch (e) {
+                kpis.replaceChildren(el('div', {
+                    class: 'card state err', style: 'grid-column:1/-1', text: 'No se pudieron cargar los indicadores.'
+                }));
+                attn.replaceChildren(el('li', { text: '—' }));
+            }
+        })();
 
-            $('#attn').innerHTML = late.length
-                ? late.map(o => `
-                    <li>
-                        <span>
-                            <span class="id">${o[0]}</span>
-                            ${badge(o[5])}
-                        </span>
+        list($('#tbl'), COLS.ord.filter(c => ['Folio', 'Cliente', 'Estado', 'Total'].includes(c[0])),
+            () => cargarOrdenes().then(o => o.slice(0, 5)), 'estado', null);
+    </script>
 
-                        <span>${o[1]} · ${o[3]}</span>
-                    </li>
-                `).join('')
-                : '<li>No hay órdenes retrasadas.</li>';
-
-            list(
-                $('#tbl'),
-                COLS.ord.filter(c =>
-                    ['Folio', 'Cliente', 'Estado', 'Total'].includes(c[0])
-                ),
-                O.slice(0, 5),
-                5,
-                null
-            );
-        </script>
-
-    </body>
+</body>
 </html>
